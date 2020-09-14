@@ -59,7 +59,7 @@ router.post('/login', (req, res, next)=>{
 
     // 3. 查询数据库
     let sql = `SELECT * FROM t_admin WHERE account = ? AND password = ?;`;
-    let value = [account, md5(password,KEY)];
+    let value = [account, password];
     Query(sql, value).then((result)=>{
         // console.log(result);
         if(result.data.length > 0){

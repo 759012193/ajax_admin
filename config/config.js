@@ -6,7 +6,9 @@ const config ={
 		USER:'root',
 		PASSWORD:'!Good1687',
 		DATABASE:'yqschool'
-	}
+	},
+	KEY:'qweTfw%5612_%%7&8gfhjdsk^&^&???<>$&P'
+
 };
 
 module.exports = config;

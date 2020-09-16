@@ -36,7 +36,6 @@ router.get('/job_pre', (req, res, next)=>{
 router.get('/job_family', (req, res, next)=>{
     const sql = `SELECT * FROM t_job_family;`;
     Query(sql).then((result)=>{
-        console.log(result.data);
         res.json({
             status: result.code,
             msg: '获取所属家园分类成功',
@@ -72,7 +71,6 @@ router.post('/add', (req, res, next)=>{
             console.log(result);
             if(result.code === 1){
                 // 返回给客户端数据
-                
                 res.json({
                     status: result.code,
                     msg: '新增人生资源成功!',
@@ -104,7 +102,7 @@ router.get('/list', (req, res, next)=>{
     // 2. SQL语句
     // (pageNum - 1) *  pageSize  ////  pageSize
     let sql1 = `SELECT COUNT(*) as job_count FROM t_job;`;
-    let sql2 = `SELECT * FROM t_job LIMIT ${(pageNum - 1) *  pageSize}, ${pageSize};`;
+    let sql2 = `SELECT * FROM t_job ORDER BY id DESC LIMIT ${(pageNum - 1) *  pageSize}, ${pageSize};`;
 
     // 3. 执行SQL
     Query(sql1).then((result1)=>{
@@ -131,6 +129,107 @@ router.get('/list', (req, res, next)=>{
             data: error.data
         })
     })
+});
+
+// 设置轮播图展示和不展示
+router.get('/set_focus_job', (req, res, next)=>{
+    // 1. 获取数据
+    let id = req.query.id;
+    let isFocus = Number(req.query.is_focus) || 0;
+
+    // 2. 验证
+    if(!id){
+        res.json({
+            status: 0,
+            msg: '参数不完整!'
+        })
+    }
+
+    // 3. 执行SQL
+    let sql = `UPDATE t_job SET is_focus = ? WHERE id = ?;`;
+    let values = [isFocus, id];
+    Query(sql, values).then((result)=>{
+        res.json({
+            status: result.code,
+            msg: '修改成功',
+            data: {}
+        })
+    }).catch((error)=>{
+        res.json({
+            status: error.code,
+            msg: '修改失败!',
+            data: error.data
+        })
+    });
+});
+
+// 删除一个人生
+router.get('/delete_job', (req, res, next)=>{
+    // 1. 获取数据
+    let id = req.query.id;
+    // 2. 验证
+    if(!id){
+        res.json({
+            status: 0,
+            msg: '参数不完整!'
+        })
+    }
+    // 3. 执行SQL
+    let sql = `DELETE FROM t_job WHERE id = ? LIMIT 1;`;
+    let values = [id];
+    Query(sql, values).then((result)=>{
+        res.json({
+            status: result.code,
+            msg: '删除成功',
+            data: {}
+        })
+    }).catch((error)=>{
+        res.json({
+            status: error.code,
+            msg: '删除失败!',
+            data: error.data
+        })
+    });
+});
+
+// 编辑人生
+router.post('/edit', (req, res, next)=>{
+    // 获取客户端数据
+    const {token, job_id, job_name, job_img, job_author, job_publish_time, job_content, job_pre_edu_id, job_family_edu_id, focus_img} = req.body;
+    // 验证合法性
+    if(req.session.token !== token){
+        res.json({
+            status: 0,
+            msg: '权限出现问题, 无法访问!'
+        })
+    }else {
+        const sql = `UPDATE t_job SET job_name=?, job_img=?, job_author=?, job_publish_time=?, job_content=?, job_pre_edu_id=?, job_family_edu_id=?, focus_img=? WHERE id=?;`;
+        const values = [job_name, job_img, job_author, job_publish_time, job_content, job_pre_edu_id, job_family_edu_id, focus_img, job_id];
+        // 插入表
+        Query(sql, values).then((result)=>{
+            console.log(result);
+            if(result.code === 1){
+                // 返回给客户端数据
+                res.json({
+                    status: result.code,
+                    msg: '修改人生资源成功!',
+                    data: {}
+                })
+            }else {
+                res.json({
+                    status: 0,
+                    msg: '修改人生资源失败!'
+                })
+            }
+        }).catch((error)=>{
+            console.log(error);
+            res.json({
+                status: error.code,
+                msg: error.msg,
+                data: error.data
+            })
+        })
+    }
 });
 
 module.exports = router;

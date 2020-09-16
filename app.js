@@ -1,4 +1,4 @@
-//引入库相关
+// 引入类库相关
 const createError = require('http-errors');
 const express = require('express');
 const path = require('path');
@@ -8,73 +8,70 @@ const logger = require('morgan');
 // 引入权限控制函数
 const authControl = require('./middleWare/authControl');
 
-
-//引入session相关
+// 引入session相关
 const session = require('express-session');
-const MYSQLStore =require('express-mysql-session')(session);
-const database=require('./config/config').database;
-const sessionStore = new MYSQLStore({
+const MySQLStore = require('express-mysql-session')(session);
+const database = require('./config/config').database;
+const sessionStore = new MySQLStore({
     host: database.HOST,
     port: database.PORT,
     user: database.USER,
     password: database.PASSWORD,
     database: database.DATABASE
-})
+});
 
-//引入路由
-var indexRouter = require('./routes/index');
+// 引入路由相关
+const indexRouter = require('./routes/index');
 const adminRouter = require('./routes/admin');
+const lifeJobRouter = require('./routes/lifejob');
 
-var app = express();
+const app = express();
 
-// 配置模版引擎
+// 配置模板引擎
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 
-
-
-
-//使用session中间件
+// 使用session持久化中间件
 app.use(session({
-  key: 'yqPlan',
-  secret: 'yqPlan', // 加密字符串
-  store: sessionStore,
-  resave: true, // 强制保存session, 即使她没有变化
-  saveUninitialized: true, // 强制初始化
-  cookie: {maxAge: 24 * 3600 * 1000},
-  rolling: true //在每次请求时进行设置cookie，将重置cookie过期时间
+    key: 'yqPlan',
+    secret: 'yqPlan', // 加密字符串
+    store: sessionStore,
+    resave: true, // 强制保存session, 即使她没有变化
+    saveUninitialized: true, // 强制初始化
+    cookie: {maxAge: 24 * 3600 * 1000},
+    // cookie: {maxAge: 1000},
+    rolling: true //在每次请求时进行设置cookie，将重置cookie过期时间
 }));
 
-//引入默认中间件
+// 使用各种默认集成的中间件
 app.use(logger('dev'));
 app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
+app.use(express.urlencoded({extended: false}));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 // 使用权限中间件
 app.use(authControl);
 
-//使用路由中间件
+// 使用路由中间件
 app.use('/', indexRouter);
 app.use('/api/auth/admin', adminRouter);
+app.use('/api/auth/life_job', lifeJobRouter);
 
-
-
-// catch 404 and forward to error handler
-app.use(function(req, res, next) {
-  next(createError(404));
+// 404处理
+app.use(function (req, res, next) {
+    next(createError(404));
 });
 
-// error handler
-app.use(function(err, req, res, next) {
-  // set locals, only providing error in development
-  res.locals.message = err.message;
-  res.locals.error = req.app.get('env') === 'development' ? err : {};
+// 统一错误处理
+app.use(function (err, req, res, next) {
+    // set locals, only providing error in development
+    res.locals.message = err.message;
+    res.locals.error = req.app.get('env') === 'development' ? err : {};
 
-  // render the error page
-  res.status(err.status || 500);
-  res.render('error');
+    // render the error page
+    res.status(err.status || 500);
+    res.render('error');
 });
 
 module.exports = app;

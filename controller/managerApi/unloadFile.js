@@ -22,9 +22,13 @@ function createUp(direct_path) {
 // 存管理员的文件信息
 const admin_up = createUp(path.join(__dirname, '../../public/uploads/images/admin'));
 const life_job_up = createUp(path.join(__dirname, '../../public/uploads/images/lifejob'));
+const resource_img_up = createUp(path.join(__dirname, '../../public/uploads/images/resource'));
+const resource_file_up = createUp(path.join(__dirname, '../../public/uploads/resource'));
 
 module.exports = {
     admin_up,
-    life_job_up
+    life_job_up,
+    resource_img_up,
+    resource_file_up
 };
 

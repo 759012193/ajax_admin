@@ -24,7 +24,7 @@ const sessionStore = new MySQLStore({
 const indexRouter = require('./routes/index');
 const adminRouter = require('./routes/admin');
 const lifeJobRouter = require('./routes/lifejob');
-
+const resourceRouter = require('./routes/resource');
 const app = express();
 
 // 配置模板引擎
@@ -57,7 +57,7 @@ app.use(authControl);
 app.use('/', indexRouter);
 app.use('/api/auth/admin', adminRouter);
 app.use('/api/auth/life_job', lifeJobRouter);
-
+app.use('/api/auth/resource', resourceRouter);
 // 404处理
 app.use(function (req, res, next) {
     next(createError(404));

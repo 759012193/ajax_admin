@@ -25,6 +25,9 @@ const indexRouter = require('./routes/index');
 const adminRouter = require('./routes/admin');
 const lifeJobRouter = require('./routes/lifejob');
 const resourceRouter = require('./routes/resource');
+const activitiesRouter = require('./routes/activities');
+const homeRouter = require('./routes/home');
+const liveRouter = require('./routes/live');
 const app = express();
 
 // 配置模板引擎
@@ -58,6 +61,8 @@ app.use('/', indexRouter);
 app.use('/api/auth/admin', adminRouter);
 app.use('/api/auth/life_job', lifeJobRouter);
 app.use('/api/auth/resource', resourceRouter);
+app.use('/api/auth/activities',activitiesRouter);
+app.use('/api/auth/live', liveRouter);
 // 404处理
 app.use(function (req, res, next) {
     next(createError(404));

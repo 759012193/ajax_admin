@@ -24,11 +24,15 @@ const admin_up = createUp(path.join(__dirname, '../../public/uploads/images/admi
 const life_job_up = createUp(path.join(__dirname, '../../public/uploads/images/lifejob'));
 const resource_img_up = createUp(path.join(__dirname, '../../public/uploads/images/resource'));
 const resource_file_up = createUp(path.join(__dirname, '../../public/uploads/resource'));
+const live_up = createUp(path.join(__dirname, '../../public/uploads/images/live'));
+const activities_img_up = createUp(path.join(__dirname, '../../public/uploads/images/activities'));
 
 module.exports = {
     admin_up,
     life_job_up,
     resource_img_up,
-    resource_file_up
+    resource_file_up,
+    live_up,
+    activities_img_up
 };
 

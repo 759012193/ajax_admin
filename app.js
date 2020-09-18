@@ -63,6 +63,7 @@ app.use('/api/auth/life_job', lifeJobRouter);
 app.use('/api/auth/resource', resourceRouter);
 app.use('/api/auth/activities',activitiesRouter);
 app.use('/api/auth/live', liveRouter);
+app.use('/api/auth/home',homeRouter);
 // 404处理
 app.use(function (req, res, next) {
     next(createError(404));

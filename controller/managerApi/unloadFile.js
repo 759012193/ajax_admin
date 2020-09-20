@@ -1,38 +1,48 @@
-// 使用磁盘引擎: 1) 动态确定存的地方  2) 确保文件名称独一无二
+// 添加存储引擎
 const multer = require('multer');
 const path = require('path');
 
 function createUp(direct_path) {
     let storage = multer.diskStorage({
-        // 用于设置存储文件的目录
+        // 此处是用于设置文件路径
         destination: function (req, file, cb) {
-            cb(null, direct_path)
+            cb(null, direct_path);
         },
-        // 设置存储文件的名称(独一无二)
+        // 设置文件名称
         filename: function (req, file, cb) {
             // 1. 获取上传图片的后缀名
-            let fieldNameArr = file.originalname.split('.');
-            let ext = fieldNameArr[fieldNameArr.length-1];
-            cb(null, file.fieldname + '-' + Date.now() + '.' + ext);
+            // hello.png --> [hello, png]
+            let fileList = file.originalname.split('.');
+            let ext = fileList[fileList.length - 1];
+
+            // 2. 不重复
+            let times = new Date();
+            times = times.getTime();
+
+            // 3. 合并新文件名
+            let newName = `${times}.${ext}`;
+            cb(null, newName);
         }
     });
-    return  multer({ storage: storage });
+    return multer({ storage });
 }
 
-// 存管理员的文件信息
 const admin_up = createUp(path.join(__dirname, '../../public/uploads/images/admin'));
-const life_job_up = createUp(path.join(__dirname, '../../public/uploads/images/lifejob'));
-const resource_img_up = createUp(path.join(__dirname, '../../public/uploads/images/resource'));
-const resource_file_up = createUp(path.join(__dirname, '../../public/uploads/resource'));
-const live_up = createUp(path.join(__dirname, '../../public/uploads/images/live'));
+const live_img_up = createUp(path.join(__dirname, '../../public/uploads/images/live'));
 const activities_img_up = createUp(path.join(__dirname, '../../public/uploads/images/activities'));
+const life_job_img_up = createUp(path.join(__dirname, '../../public/uploads/images/lifejob'));
+const resource_file_up = createUp(path.join(__dirname, '../../public/uploads/resource'));
+const resource_img_up = createUp(path.join(__dirname, '../../public/uploads/images/resource'));
+const home_img_up = createUp(path.join(__dirname, '../../public/uploads/images/home'));
+const client_img_up = createUp(path.join(__dirname, '../../public/uploads/images/client'));
 
 module.exports = {
     admin_up,
-    life_job_up,
-    resource_img_up,
+    live_img_up,
+    activities_img_up,
+    life_job_img_up,
     resource_file_up,
-    live_up,
-    activities_img_up
+    resource_img_up,
+    home_img_up,
+    client_img_up
 };
-

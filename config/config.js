@@ -7,7 +7,8 @@ const config ={
 		PASSWORD:'!Good1687',
 		DATABASE:'yqschool'
 	},
-	KEY:'qweTfw%5612_%%7&8gfhjdsk^&^&???<>$&P'
+	KEY:'qweTfw%5612_%%7&8gfhjdsk^&^&???<>$&P',
+	PC_KEY: 'iTlike@#*weew2112``~~---++===yyyjhh',
 
 };
 

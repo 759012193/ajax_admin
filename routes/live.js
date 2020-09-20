@@ -1,12 +1,12 @@
 const express = require('express');
 const router = express.Router();
 
-const {live_up} = require('./../controller/managerApi/unloadFile');
+const {live_img_up} = require('./../controller/managerApi/unloadFile');
 const Query = require('./../config/dbHelper');
 
 
 // 上传直播封面图和焦点图
-router.post('/upload_live', live_up.single('live_img'), (req, res, next)=>{
+router.post('/upload_live', live_img_up.single('live_img'), (req, res, next)=>{
     res.json({
         status: 1,
         msg: '图片上传成功',
@@ -51,12 +51,16 @@ router.get('/live_person', (req, res, next)=>{
 // 添加一个直播课程
 router.post('/add', (req, res, next)=>{
     const {token, live_title, live_url, live_author, live_img, live_begin_time, live_end_time, live_price, live_person_id, live_theme_id, focus_img } = req.body;
+    console.log(req.body);
+    console.log(req.session.token);
     if(req.session.token !== token){
+        console.log('++++++++');
         res.json({
            status: 0,
            msg: '非法用户!'
         });
     }else {
+       console.log('---------');
        const sql = `INSERT INTO t_live(live_title, live_author, live_img, live_begin_time, live_end_time, live_price, live_url, live_person_id, live_theme_id, focus_img) VALUES (?,?,?,?,?,?,?,?,?,?);`;
        const value = [live_title,  live_author, live_img, live_begin_time, live_end_time, live_price, live_url, live_person_id, live_theme_id, focus_img];
         Query(sql, value).then((result)=>{

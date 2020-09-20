@@ -28,6 +28,7 @@ const resourceRouter = require('./routes/resource');
 const activitiesRouter = require('./routes/activities');
 const homeRouter = require('./routes/home');
 const liveRouter = require('./routes/live');
+const clientRouter = require('./routes/client');
 const app = express();
 
 // 配置模板引擎
@@ -64,6 +65,7 @@ app.use('/api/auth/resource', resourceRouter);
 app.use('/api/auth/activities',activitiesRouter);
 app.use('/api/auth/live', liveRouter);
 app.use('/api/auth/home',homeRouter);
+app.use('/web', clientRouter);
 // 404处理
 app.use(function (req, res, next) {
     next(createError(404));
